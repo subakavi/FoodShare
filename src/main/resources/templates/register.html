@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodShare | Register</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="auth-page register-page">
+
+<main class="auth-layout">
+
+    <section class="auth-welcome register-welcome">
+        <a href="/login" class="auth-brand">
+            <span class="auth-brand-icon">🌿</span>
+            <span>FoodShare</span>
+        </a>
+
+        <div class="auth-welcome-content">
+            <span class="auth-eyebrow">JOIN THE FOODSHARE COMMUNITY</span>
+            <h1>Small acts of sharing create a better world.</h1>
+            <p>
+                Become part of a community connecting food donors with
+                recipient organizations. Help make surplus food useful
+                and support a more sustainable future.
+            </p>
+
+            <div class="register-benefits">
+                <div class="register-benefit">
+                    <span>🥗</span>
+                    <div>
+                        <strong>Donate surplus food</strong>
+                        <p>Help available food reach people who need it.</p>
+                    </div>
+                </div>
+
+                <div class="register-benefit">
+                    <span>🤝</span>
+                    <div>
+                        <strong>Connect with the community</strong>
+                        <p>Coordinate donations, requests and distribution.</p>
+                    </div>
+                </div>
+
+                <div class="register-benefit">
+                    <span>🌱</span>
+                    <div>
+                        <strong>Reduce food waste</strong>
+                        <p>Give good food a meaningful second chance.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <p class="auth-side-footer">FoodShare · Making every donation count</p>
+    </section>
+
+    <section class="auth-form-section register-form-section">
+        <div class="auth-form-card register-form-card">
+
+            <div class="auth-mobile-brand">
+                <span>🌿</span> FoodShare
+            </div>
+
+            <div class="auth-form-heading">
+                <span class="auth-form-icon">✨</span>
+                <h2>Create your account</h2>
+                <p>Fill in your details to join FoodShare.</p>
+            </div>
+
+            <div class="auth-message error"
+                 th:if="${error}"
+                 th:text="${error}"></div>
+
+            <form method="post" action="/register" class="auth-form register-form">
+
+                <label for="register-name">Full name</label>
+                <input
+                    id="register-name"
+                    type="text"
+                    name="fullName"
+                    maxlength="100"
+                    placeholder="Enter your full name"
+                    autocomplete="name"
+                    required>
+
+                <label for="register-email">Email address</label>
+                <input
+                    id="register-email"
+                    type="email"
+                    name="email"
+                    maxlength="150"
+                    placeholder="you@example.com"
+                    autocomplete="email"
+                    required>
+
+                <label for="register-password">Password</label>
+                <input
+                    id="register-password"
+                    type="password"
+                    name="password"
+                    minlength="8"
+                    placeholder="Minimum 8 characters"
+                    autocomplete="new-password"
+                    required>
+
+                <label for="register-role">Choose account type</label>
+                <select id="register-role" name="role" required>
+                    <option value="" disabled selected>Select your role</option>
+                    <option
+                        th:each="r : ${roles}"
+                        th:value="${r}"
+                        th:text="${r == T(com.foodshare.user.UserRole).DONOR
+                            ? 'Food Donor'
+                            : 'Recipient Organization'}">
+                    </option>
+                </select>
+
+                <p class="register-role-hint">
+                    Choose <strong>Food Donor</strong> to share available food,
+                    or <strong>Recipient Organization</strong> to request donations.
+                </p>
+
+                <button type="submit" class="auth-submit-button">
+                    Create account <span>→</span>
+                </button>
+            </form>
+
+            <div class="auth-divider"><span>ALREADY A MEMBER?</span></div>
+
+            <a href="/login" class="auth-create-account">
+                Sign in to your account
+            </a>
+
+            <p class="auth-privacy-note">
+                🌱 Together, we can make every donation count.
+            </p>
+        </div>
+
+        <p class="auth-copyright">© FoodShare Prototype</p>
+    </section>
+
+</main>
+
+</body>
+</html>

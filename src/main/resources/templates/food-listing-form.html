@@ -1,0 +1,228 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodShare | Add Food Donation</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="food-form-page">
+
+<header class="dashboard-header">
+    <a href="/dashboard" class="brand">
+        <span class="brand-icon">🥗</span>
+        <span>FoodShare</span>
+    </a>
+
+    <div class="header-right">
+        <a href="/food-listings" class="food-form-back">← Food Listings</a>
+        <form method="post" action="/logout">
+            <button class="secondary logout-btn" type="submit">Logout ↗</button>
+        </form>
+    </div>
+</header>
+
+<main class="food-form-container">
+
+    <div class="food-form-breadcrumb">
+        <a href="/dashboard">Dashboard</a>
+        <span>›</span>
+        <a href="/food-listings">Food Listings</a>
+        <span>›</span>
+        <span>Add Donation</span>
+    </div>
+
+    <section class="food-form-layout">
+
+        <div class="food-form-main">
+
+            <div class="food-form-heading">
+                <div class="food-form-heading-icon">🥬</div>
+                <div>
+                    <p class="eyebrow">MAKE A DIFFERENCE</p>
+                    <h1>Add a food donation</h1>
+                    <p>
+                        Share surplus food with people who need it.
+                        Complete the details below to create your listing.
+                    </p>
+                </div>
+            </div>
+
+            <div class="food-form-error"
+                 th:if="${error}"
+                 th:text="${error}"
+                 role="alert">
+            </div>
+
+            <form class="food-donation-form"
+                  method="post"
+                  action="/food-listings/save">
+
+                <div class="food-form-section-title">
+                    <span class="form-section-number">01</span>
+                    <div>
+                        <h2>Food details</h2>
+                        <p>Tell recipients what food is available.</p>
+                    </div>
+                </div>
+
+                <label class="food-field">
+                    <span>Food name <span class="required-mark">*</span></span>
+                    <input
+                        name="foodName"
+                        type="text"
+                        maxlength="120"
+                        th:value="${listing.foodName}"
+                        placeholder="e.g. Fresh vegetable rice"
+                        autocomplete="off"
+                        required>
+                    <small>Enter a clear name for the food donation.</small>
+                </label>
+
+                <label class="food-field">
+                    <span>Description</span>
+                    <textarea
+                        name="description"
+                        maxlength="1000"
+                        rows="4"
+                        th:text="${listing.description}"
+                        placeholder="Describe the food, preparation, packaging, or other useful details."></textarea>
+                    <small>Optional. Include details that help recipients understand the donation.</small>
+                </label>
+
+                <div class="food-form-divider"></div>
+
+                <div class="food-form-section-title">
+                    <span class="form-section-number">02</span>
+                    <div>
+                        <h2>Quantity and pickup</h2>
+                        <p>Provide the amount and collection location.</p>
+                    </div>
+                </div>
+
+                <label class="food-field">
+                    <span>Quantity <span class="required-mark">*</span></span>
+                    <div class="food-input-with-unit">
+                        <input
+                            name="quantity"
+                            type="number"
+                            min="1"
+                            max="500"
+                            th:value="${listing.quantity}"
+                            placeholder="Enter quantity"
+                            required>
+                        <span>Units</span>
+                    </div>
+                    <small>Enter a value from 1 to 500 units.</small>
+                </label>
+
+                <label class="food-field">
+                    <span>Pickup location <span class="required-mark">*</span></span>
+                    <input
+                        name="pickupLocation"
+                        type="text"
+                        maxlength="200"
+                        th:value="${listing.pickupLocation}"
+                        placeholder="e.g. Main gate, building or area"
+                        autocomplete="street-address"
+                        required>
+                    <small>Provide a location where the donation can be collected.</small>
+                </label>
+
+                <div class="food-form-divider"></div>
+
+                <div class="food-form-section-title">
+                    <span class="form-section-number">03</span>
+                    <div>
+                        <h2>Expiry information</h2>
+                        <p>Help recipients understand when the food should be used.</p>
+                    </div>
+                </div>
+
+                <label class="food-field">
+                    <span>Expiry / use-by date <span class="required-mark">*</span></span>
+                    <input
+                        name="expiryDate"
+                        type="date"
+                        th:attr="min=${today}"
+                        th:value="${listing.expiryDate}"
+                        required>
+                    <small>Select today or a future date, subject to the application's validation rules.</small>
+                </label>
+
+                <div class="food-form-guidance">
+                    <span>💚</span>
+                    <p>
+                        <strong>Before submitting:</strong>
+                        Check that the quantity, pickup details, and expiry date are accurate.
+                        Only list food that is safe to donate.
+                    </p>
+                </div>
+
+                <div class="food-form-actions">
+                    <button class="food-save-btn" type="submit">
+                        Save food listing <span>→</span>
+                    </button>
+                    <a class="food-cancel-btn" href="/food-listings">Cancel</a>
+                </div>
+
+                <p class="food-required-note">
+                    <span class="required-mark">*</span> Required fields
+                </p>
+
+            </form>
+        </div>
+
+        <aside class="food-form-sidebar">
+
+            <div class="food-sidebar-illustration">🥗</div>
+
+            <p class="eyebrow">FOODSHARE IMPACT</p>
+            <h2>Your extra food can make someone's day.</h2>
+            <p class="food-sidebar-description">
+                Every accurate listing helps donors and recipients coordinate
+                food collection and distribution more effectively.
+            </p>
+
+            <div class="food-sidebar-tip">
+                <span>✓</span>
+                <div>
+                    <strong>Be specific</strong>
+                    <p>Use a clear food name and quantity.</p>
+                </div>
+            </div>
+
+            <div class="food-sidebar-tip">
+                <span>✓</span>
+                <div>
+                    <strong>Choose the right location</strong>
+                    <p>Make the pickup point easy to identify.</p>
+                </div>
+            </div>
+
+            <div class="food-sidebar-tip">
+                <span>✓</span>
+                <div>
+                    <strong>Check the expiry date</strong>
+                    <p>Provide accurate use-by information.</p>
+                </div>
+            </div>
+
+            <div class="food-sidebar-footer">
+                Share more. Waste less.
+            </div>
+
+        </aside>
+
+    </section>
+
+    <footer class="food-form-footer">
+        <a href="/dashboard">← Back to dashboard</a>
+        <span>🥗 FoodShare · Share more. Waste less.</span>
+    </footer>
+
+</main>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodShare | Reports & Analytics</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="reports-page">
+
+<header class="dashboard-header">
+    <a href="/dashboard" class="brand">
+        <span class="brand-icon">🌿</span>
+        <span>FoodShare</span>
+    </a>
+    <div class="header-actions">
+        <span class="header-caption">Reports & Analytics</span>
+        <form method="post" action="/logout">
+            <button class="logout-button" type="submit">Logout ↗</button>
+        </form>
+    </div>
+</header>
+
+<main class="container reports-container">
+
+    <section class="reports-hero">
+        <div>
+            <span class="reports-eyebrow">INSIGHTS & OVERVIEW</span>
+            <h1>Reports & Analytics</h1>
+            <p>
+                Track food donations, monitor request progress and review
+                distribution activity across FoodShare.
+            </p>
+        </div>
+        <div class="reports-hero-icon">📊</div>
+    </section>
+
+    <section class="reports-intro">
+        <div>
+            <h2>Platform overview</h2>
+            <p class="muted">
+                A summary of records currently stored in the database.
+            </p>
+        </div>
+        <span class="reports-live-label">
+            <span class="reports-live-dot"></span>
+            DATABASE SUMMARY
+        </span>
+    </section>
+
+    <section class="reports-stats">
+
+        <article class="report-stat report-stat-green">
+            <div class="report-stat-top">
+                <span class="report-stat-icon">🥗</span>
+                <span class="report-stat-category">DONATIONS</span>
+            </div>
+            <p class="report-stat-label">Total listings</p>
+            <strong class="report-stat-value"
+                    th:text="${summary.totalListings}">0</strong>
+            <p class="report-stat-description">
+                Food donations recorded on the platform
+            </p>
+        </article>
+
+        <article class="report-stat report-stat-blue">
+            <div class="report-stat-top">
+                <span class="report-stat-icon">📋</span>
+                <span class="report-stat-category">ACTIVITY</span>
+            </div>
+            <p class="report-stat-label">Total requests</p>
+            <strong class="report-stat-value"
+                    th:text="${summary.totalRequests}">0</strong>
+            <p class="report-stat-description">
+                Requests submitted for food donations
+            </p>
+        </article>
+
+        <article class="report-stat report-stat-orange">
+            <div class="report-stat-top">
+                <span class="report-stat-icon">⏳</span>
+                <span class="report-stat-category">IN PROGRESS</span>
+            </div>
+            <p class="report-stat-label">Pending requests</p>
+            <strong class="report-stat-value"
+                    th:text="${summary.pendingRequests}">0</strong>
+            <p class="report-stat-description">
+                Requests awaiting a decision
+            </p>
+        </article>
+
+        <article class="report-stat report-stat-purple">
+            <div class="report-stat-top">
+                <span class="report-stat-icon">✓</span>
+                <span class="report-stat-category">APPROVALS</span>
+            </div>
+            <p class="report-stat-label">Approved requests</p>
+            <strong class="report-stat-value"
+                    th:text="${summary.approvedRequests}">0</strong>
+            <p class="report-stat-description">
+                Requests approved by donors
+            </p>
+        </article>
+
+        <article class="report-stat report-stat-teal">
+            <div class="report-stat-top">
+                <span class="report-stat-icon">🚚</span>
+                <span class="report-stat-category">DISTRIBUTION</span>
+            </div>
+            <p class="report-stat-label">Completed distributions</p>
+            <strong class="report-stat-value"
+                    th:text="${summary.completedDistributions}">0</strong>
+            <p class="report-stat-description">
+                Donations marked as distributed
+            </p>
+        </article>
+
+    </section>
+
+    <section class="reports-note">
+        <span class="reports-note-icon">💡</span>
+        <div>
+            <strong>Understanding these reports</strong>
+            <p>
+                These figures reflect the records currently stored in FoodShare.
+                Pending and approved requests show workflow progress, while
+                completed distributions indicate food that has reached the
+                distribution stage.
+            </p>
+        </div>
+    </section>
+
+    <footer class="reports-footer">
+        <span>FoodShare · Food donation management</span>
+        <a href="/dashboard">← Back to dashboard</a>
+    </footer>
+
+</main>
+</body>
+</html>

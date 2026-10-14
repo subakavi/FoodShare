@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodShare | Matching Food</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="matching-page">
+
+<header class="dashboard-header">
+    <a href="/dashboard" class="brand">
+        <span class="brand-icon">🌿</span>
+        <span>FoodShare</span>
+    </a>
+    <div class="header-actions">
+        <a href="/requests" class="matching-header-link">My Requests</a>
+        <form method="post" action="/logout">
+            <button class="logout-button" type="submit">Logout ↗</button>
+        </form>
+    </div>
+</header>
+
+<main class="container matching-container">
+
+    <section class="matching-hero">
+        <div>
+            <span class="matching-eyebrow">FOOD DISCOVERY & DISTRIBUTION</span>
+            <h1>Find food. Share hope.</h1>
+            <p>
+                Explore eligible food donations and request the quantity you need.
+                Every successful match helps reduce food waste.
+            </p>
+            <a href="/requests" class="matching-hero-link">
+                View my requests <span>→</span>
+            </a>
+        </div>
+        <div class="matching-hero-art">🥦</div>
+    </section>
+
+    <div class="matching-section-heading">
+        <div>
+            <span class="matching-section-label">AVAILABLE NOW</span>
+            <h2>Eligible food donations</h2>
+            <p class="muted">
+                Only available, non-expired listings with a positive quantity are shown.
+            </p>
+        </div>
+        <div class="matching-count-card">
+            <span class="matching-count-icon">🥗</span>
+            <div>
+                <strong th:text="${#lists.size(listings)}">0</strong>
+                <span>Listings found</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="matching-alert error" th:if="${param.error}">
+        <strong>Request not submitted</strong>
+        <p>Unable to submit request. Check quantity, role, or listing availability.</p>
+    </div>
+
+    <section class="matching-table-card">
+        <div class="matching-table-heading">
+            <div>
+                <h3>Food donation directory</h3>
+                <p>Review each listing before submitting a request.</p>
+            </div>
+            <span class="matching-available-label">
+                <span class="matching-dot"></span> Available listings
+            </span>
+        </div>
+
+        <div class="table-wrap matching-table-wrap">
+            <table class="matching-table">
+                <thead>
+                    <tr>
+                        <th>Food details</th>
+                        <th>Available quantity</th>
+                        <th>Pickup location</th>
+                        <th>Expiry date</th>
+                        <th>Donor</th>
+                        <th>Request food</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${listings}">
+                        <td class="matching-food-cell">
+                            <span class="matching-food-icon">🍱</span>
+                            <strong th:text="${item.foodName}"></strong>
+                        </td>
+                        <td>
+                            <span class="matching-quantity"
+                                  th:text="${item.quantity}"></span>
+                        </td>
+                        <td>
+                            <span class="matching-location">
+                                <span>📍</span>
+                                <span th:text="${item.pickupLocation}"></span>
+                            </span>
+                        </td>
+                        <td>
+                            <span class="matching-expiry"
+                                  th:text="${item.expiryDate}"></span>
+                        </td>
+                        <td class="matching-donor"
+                            th:text="${item.donorEmail}"></td>
+                        <td class="matching-request-cell">
+                            <form
+                                th:if="${userRole == 'RECIPIENT'}"
+                                method="post"
+                                th:action="@{/requests/create/{id}(id=${item.id})}"
+                                class="matching-request-form">
+                                <input
+                                    type="number"
+                                    name="requestedQuantity"
+                                    min="1"
+                                    th:attr="max=${item.quantity}"
+                                    value="1"
+                                    aria-label="Requested quantity"
+                                    required>
+                                <button type="submit" class="matching-request-button">
+                                    Request <span>→</span>
+                                </button>
+                            </form>
+                            <span class="matching-role-note"
+                                  th:unless="${userRole == 'RECIPIENT'}">
+                                Recipient account required
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(listings)}">
+                        <td colspan="6" class="matching-empty-cell">
+                            <div class="matching-empty-icon">🥬</div>
+                            <strong>No eligible donations found</strong>
+                            <p>
+                                There are no available, non-expired food listings right now.
+                                Please check again later.
+                            </p>
+                            <a href="/dashboard" class="matching-empty-link">
+                                Return to dashboard
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="matching-table-footer">
+            <span>🌱 Helping good food reach those who need it.</span>
+            <a href="/requests">View all requests →</a>
+        </div>
+    </section>
+
+    <section class="matching-info">
+        <span class="matching-info-icon">ℹ️</span>
+        <div>
+            <strong>Before you request</strong>
+            <p>
+                Enter a quantity between 1 and the available amount.
+                Check the pickup location and expiry date before submitting.
+            </p>
+        </div>
+    </section>
+
+    <footer class="matching-footer">
+        <span>FoodShare · Food donation management</span>
+        <a href="/dashboard">← Back to dashboard</a>
+    </footer>
+
+</main>
+</body>
+</html>

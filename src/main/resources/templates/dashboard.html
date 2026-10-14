@@ -1,0 +1,143 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodShare | Dashboard</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="dashboard-page">
+
+<header class="dashboard-header">
+    <a href="/dashboard" class="brand">
+        <span class="brand-icon">🥗</span>
+        <span>FoodShare</span>
+    </a>
+
+    <div class="header-right">
+        <span class="header-label">Donation Management</span>
+        <form method="post" action="/logout">
+            <button class="secondary logout-btn" type="submit">
+                Logout ↗
+            </button>
+        </form>
+    </div>
+</header>
+
+<main class="dashboard-container">
+
+    <section class="welcome-section">
+        <div>
+            <p class="eyebrow">YOUR FOODSHARE WORKSPACE</p>
+            <h1>Welcome back, <span th:text="${userName}">User</span>!</h1>
+            <p class="welcome-description">
+                Small actions make a big difference. Let's get food to the people who need it.
+            </p>
+        </div>
+
+        <div class="role-badge">
+            <span class="status-dot"></span>
+            <span th:text="${userRole}">USER</span>
+        </div>
+    </section>
+
+    <section class="impact-banner">
+        <div class="impact-icon">🌱</div>
+        <div class="impact-copy">
+            <h2>Good food. Better future.</h2>
+            <p>Manage donations, connect with recipients, and follow every step from collection to distribution.</p>
+        </div>
+        <a href="/food-listings" class="banner-link">
+            Explore donations <span>→</span>
+        </a>
+    </section>
+
+    <section class="section-heading">
+        <div>
+            <h2>Your workspace</h2>
+            <p>Choose a module to get started.</p>
+        </div>
+    </section>
+
+    <section class="dashboard-grid">
+
+        <a class="dashboard-card food-card" href="/food-listings">
+            <div class="card-top">
+                <span class="module-icon">🥬</span>
+                <span class="card-arrow">↗</span>
+            </div>
+            <span class="card-category">DISCOVER</span>
+            <h3>Food Listings</h3>
+            <p>Browse available food donations and find what is ready to be shared.</p>
+            <span class="card-action">View listings →</span>
+        </a>
+
+        <a class="dashboard-card matching-card" href="/matching">
+            <div class="card-top">
+                <span class="module-icon">🤝</span>
+                <span class="card-arrow">↗</span>
+            </div>
+            <span class="card-category">CONNECT</span>
+            <h3>Donation Matching</h3>
+            <p>Find suitable food donations and connect available food with recipients.</p>
+            <span class="card-action">Find matches →</span>
+        </a>
+
+        <a class="dashboard-card requests-card" href="/requests">
+            <div class="card-top">
+                <span class="module-icon">📋</span>
+                <span class="card-arrow">↗</span>
+            </div>
+            <span class="card-category">COORDINATE</span>
+            <h3>Donation Requests</h3>
+            <p>Review donation requests and manage the request process.</p>
+            <span class="card-action">Manage requests →</span>
+        </a>
+
+        <a class="dashboard-card tracking-card" href="/tracking">
+            <div class="card-top">
+                <span class="module-icon">🚚</span>
+                <span class="card-arrow">↗</span>
+            </div>
+            <span class="card-category">FOLLOW THROUGH</span>
+            <h3>Collection Tracking</h3>
+            <p>Follow food collections and distribution progress in one place.</p>
+            <span class="card-action">Track progress →</span>
+        </a>
+
+        <a class="dashboard-card reports-card" href="/reports">
+            <div class="card-top">
+                <span class="module-icon">📊</span>
+                <span class="card-arrow">↗</span>
+            </div>
+            <span class="card-category">INSIGHTS</span>
+            <h3>Reports &amp; Statistics</h3>
+            <p>Review available FoodShare statistics and donation reports.</p>
+            <span class="card-action">View reports →</span>
+        </a>
+
+        <a class="dashboard-card add-food-card"
+           th:if="${userRole == 'DONOR'}"
+           href="/food-listings/new">
+            <div class="card-top">
+                <span class="module-icon">➕</span>
+                <span class="card-arrow">↗</span>
+            </div>
+            <span class="card-category">MAKE AN IMPACT</span>
+            <h3>Add Food Donation</h3>
+            <p>Have surplus food? Create a listing so it can reach someone who needs it.</p>
+            <span class="card-action">Create a listing →</span>
+        </a>
+
+    </section>
+
+    <footer class="dashboard-footer">
+        <span>🥗 <strong>FoodShare</strong></span>
+        <span>Share more. Waste less. Care together.</span>
+    </footer>
+
+</main>
+</body>
+</html>

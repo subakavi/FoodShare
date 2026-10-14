@@ -1,0 +1,179 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodShare | Donation Requests</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="requests-page">
+
+<header class="dashboard-header">
+    <a href="/dashboard" class="brand">
+        <span class="brand-icon">🥗</span>
+        <span>FoodShare</span>
+    </a>
+
+    <div class="header-right">
+        <a href="/dashboard" class="requests-back-link">← Dashboard</a>
+        <form method="post" action="/logout">
+            <button class="secondary logout-btn" type="submit">Logout ↗</button>
+        </form>
+    </div>
+</header>
+
+<main class="requests-container">
+
+    <section class="requests-intro">
+        <div>
+            <p class="eyebrow">DONATION MANAGEMENT</p>
+            <h1>Donation Requests</h1>
+            <p class="requests-subtitle">
+                Manage food requests, review quantities, and help donations reach the right people.
+            </p>
+        </div>
+
+        <div class="requests-illustration" aria-hidden="true">📋</div>
+    </section>
+
+    <div class="requests-notice notice-success" th:if="${param.created}">
+        <span class="notice-symbol">✓</span>
+        <span>Your donation request has been submitted successfully.</span>
+    </div>
+
+    <div class="requests-notice notice-success" th:if="${param.updated}">
+        <span class="notice-symbol">✓</span>
+        <span>The donation request has been updated successfully.</span>
+    </div>
+
+    <div class="requests-notice notice-error" th:if="${param.error}">
+        <span class="notice-symbol">!</span>
+        <span>
+            Action could not be completed. Check permissions, quantity, or request status.
+        </span>
+    </div>
+
+    <section class="requests-banner">
+        <div class="requests-banner-icon">🤝</div>
+        <div class="requests-banner-copy">
+            <h2>Every request matters</h2>
+            <p>
+                Review requests carefully and coordinate with donors to reduce food waste.
+            </p>
+        </div>
+        <a href="/matching" class="requests-match-link">
+            Find matching food <span>→</span>
+        </a>
+    </section>
+
+    <section class="requests-panel">
+        <div class="requests-panel-heading">
+            <div>
+                <h2>All requests</h2>
+                <p>Review request details and take the appropriate action.</p>
+            </div>
+
+            <span class="requests-panel-tag">REQUEST MANAGEMENT</span>
+        </div>
+
+        <div class="requests-table-wrap">
+            <table class="requests-table">
+                <thead>
+                    <tr>
+                        <th>Request ID</th>
+                        <th>Listing ID</th>
+                        <th>Recipient</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Decision</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="r : ${requests}">
+                        <td>
+                            <span class="request-number">
+                                #<span th:text="${r.id}"></span>
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="request-listing-id"
+                                  th:text="${r.foodListingId}"></span>
+                        </td>
+
+                        <td class="request-recipient"
+                            th:text="${r.requesterEmail}"></td>
+
+                        <td>
+                            <span class="request-quantity"
+                                  th:text="${r.requestedQuantity}"></span>
+                        </td>
+
+                        <td>
+                            <span class="request-status"
+                                  th:classappend="${r.status.name() == 'REQUESTED'} ? ' request-status-pending' : (${r.status.name() == 'APPROVED'} ? ' request-status-approved' : (${r.status.name() == 'REJECTED'} ? ' request-status-rejected' : ' request-status-other'))"
+                                  th:text="${r.status}">
+                            </span>
+                        </td>
+
+                        <td class="request-decision-cell">
+                            <div class="request-decision-actions"
+                                 th:if="${isDonor and r.status.name() == 'REQUESTED'}">
+
+                                <form method="post"
+                                      th:action="@{/requests/{id}/decision(id=${r.id})}">
+                                    <input type="hidden" name="action" value="approve">
+                                    <button class="request-approve-btn" type="submit">
+                                        ✓ Approve
+                                    </button>
+                                </form>
+
+                                <form method="post"
+                                      th:action="@{/requests/{id}/decision(id=${r.id})}">
+                                    <input type="hidden" name="action" value="reject">
+                                    <button class="request-reject-btn" type="submit">
+                                        ✕ Reject
+                                    </button>
+                                </form>
+                            </div>
+
+                            <span class="request-no-action"
+                                  th:unless="${isDonor and r.status.name() == 'REQUESTED'}">
+                                No action
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(requests)}">
+                        <td colspan="6">
+                            <div class="requests-empty">
+                                <span class="requests-empty-icon">📭</span>
+                                <h3>No donation requests yet</h3>
+                                <p>
+                                    New requests will appear here when recipients request food donations.
+                                </p>
+                                <a href="/matching">Explore matching food →</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="requests-table-note">
+            <span>ℹ️</span>
+            Only eligible donors can approve or reject requests that are still pending.
+        </p>
+    </section>
+
+    <footer class="requests-footer">
+        <a href="/dashboard">← Back to dashboard</a>
+        <span>🥗 FoodShare · Share more. Waste less.</span>
+    </footer>
+
+</main>
+</body>
+</html>

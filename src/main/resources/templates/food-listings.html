@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodShare | Food Listings</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+<body class="listings-page">
+
+<header class="dashboard-header">
+    <a href="/dashboard" class="brand">
+        <span class="brand-icon">🌿</span>
+        <span>FoodShare</span>
+    </a>
+    <div class="header-actions">
+        <span class="header-caption">Food Donation Portal</span>
+        <form method="post" action="/logout">
+            <button class="logout-button" type="submit">Logout ↗</button>
+        </form>
+    </div>
+</header>
+
+<main class="container listings-container">
+
+    <section class="listings-hero">
+        <div class="listings-hero-text">
+            <span class="listings-eyebrow">DONATION MANAGEMENT</span>
+            <h1>Food Listings</h1>
+            <p>Discover available food donations and help good food reach people who need it.</p>
+        </div>
+        <div class="listings-hero-icon">🥗</div>
+    </section>
+
+    <div class="listings-toolbar">
+        <div>
+            <h2>Available donations</h2>
+            <p class="muted">Review food details, pickup locations and expiry dates.</p>
+        </div>
+        <a class="button listings-add-button"
+           th:if="${userRole == 'DONOR'}"
+           href="/food-listings/new">
+            <span>＋</span> Add listing
+        </a>
+    </div>
+
+    <div class="listings-alert success" th:if="${param.saved}">
+        <span>✓</span> Food listing saved successfully.
+    </div>
+
+    <div class="listings-alert success" th:if="${param.deleted}">
+        <span>✓</span> Listing deleted if it belonged to your account.
+    </div>
+
+    <div class="listings-alert error" th:if="${param.error == 'donorOnly'}">
+        Only donor accounts can add or delete listings.
+    </div>
+
+    <section class="listings-table-card">
+        <div class="listings-table-heading">
+            <div>
+                <h3>Donation inventory</h3>
+                <p>Food available for collection and distribution</p>
+            </div>
+            <span class="listings-label">LIVE LISTINGS</span>
+        </div>
+
+        <div class="table-wrap listings-table-wrap">
+            <table class="listings-table">
+                <thead>
+                    <tr>
+                        <th>Food details</th>
+                        <th>Quantity</th>
+                        <th>Pickup location</th>
+                        <th>Expiry date</th>
+                        <th>Donor</th>
+                        <th>Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${listings}">
+                        <td class="listing-food-cell">
+                            <strong th:text="${item.foodName}"></strong>
+                            <small th:text="${item.description}"></small>
+                        </td>
+                        <td>
+                            <span class="listing-quantity"
+                                  th:text="${item.quantity}"></span>
+                        </td>
+                        <td>
+                            <span class="listing-location">
+                                <span>📍</span>
+                                <span th:text="${item.pickupLocation}"></span>
+                            </span>
+                        </td>
+                        <td th:text="${item.expiryDate}"></td>
+                        <td class="listing-donor"
+                            th:text="${item.donorEmail}"></td>
+                        <td>
+                            <span class="pill listing-status"
+                                  th:text="${item.status}"></span>
+                        </td>
+                        <td class="listing-action-cell">
+                            <form
+                                th:if="${userRole == 'DONOR' and userEmail == item.donorEmail}"
+                                th:action="@{/food-listings/{id}/delete(id=${item.id})}"
+                                method="post">
+                                <button class="danger listing-delete-button"
+                                        type="submit"
+                                        onclick="return confirm('Delete this listing?')">
+                                    Delete
+                                </button>
+                            </form>
+                            <span class="listing-no-action"
+                                  th:unless="${userRole == 'DONOR' and userEmail == item.donorEmail}">
+                                —
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(listings)}">
+                        <td colspan="7" class="listings-empty-cell">
+                            <div class="listings-empty-icon">🥬</div>
+                            <strong>No food listings yet</strong>
+                            <p>New donations will appear here when they are added.</p>
+                            <a class="button"
+                               th:if="${userRole == 'DONOR'}"
+                               href="/food-listings/new">
+                                Add your first listing
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="listings-table-footer">
+            <span>FoodShare · Food donation management</span>
+            <a href="/dashboard">← Back to dashboard</a>
+        </div>
+    </section>
+
+    <footer class="listings-footer">
+        <span>🌱 Every donation makes a difference.</span>
+        <span>FoodShare Prototype</span>
+    </footer>
+
+</main>
+</body>
+</html>

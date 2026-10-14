@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FoodShare | Collection Tracking</title>
+    <link rel="stylesheet" href="/style.css">
+</head>
+
+<body class="tracking-page">
+
+<header class="dashboard-header">
+    <a href="/dashboard" class="brand">
+        <span class="brand-icon">🥗</span>
+        <span>FoodShare</span>
+    </a>
+
+    <div class="header-right">
+        <a href="/dashboard" class="tracking-back-link">← Dashboard</a>
+        <form method="post" action="/logout">
+            <button class="secondary logout-btn" type="submit">Logout ↗</button>
+        </form>
+    </div>
+</header>
+
+<main class="tracking-container">
+
+    <section class="tracking-intro">
+        <div>
+            <p class="eyebrow">DONATION MANAGEMENT</p>
+            <h1>Collection &amp; Distribution</h1>
+            <p class="tracking-subtitle">
+                Follow every donation from approval to collection and final distribution.
+            </p>
+        </div>
+
+        <div class="tracking-illustration" aria-hidden="true">🚚</div>
+    </section>
+
+    <div class="tracking-notice success"
+         th:if="${param.updated}">
+        <span>✓</span>
+        Tracking status updated successfully.
+    </div>
+
+    <div class="tracking-notice error"
+         th:if="${param.error}">
+        <span>!</span>
+        Update rejected. Only donors can update status, and transitions must be valid.
+    </div>
+
+    <section class="tracking-info">
+        <div class="tracking-info-icon">📦</div>
+        <div>
+            <h2>Donation progress</h2>
+            <p>
+                Approved requests can be marked as collected. After collection,
+                donors can mark them as distributed.
+            </p>
+        </div>
+    </section>
+
+    <section class="tracking-section">
+        <div class="tracking-section-heading">
+            <div>
+                <h2>Donation requests</h2>
+                <p>Review requests and update their delivery progress.</p>
+            </div>
+            <span class="tracking-label">LIVE REQUEST LIST</span>
+        </div>
+
+        <div class="tracking-table-wrap">
+            <table class="tracking-table">
+                <thead>
+                    <tr>
+                        <th>Request</th>
+                        <th>Listing ID</th>
+                        <th>Recipient</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Next action</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    <tr th:each="r : ${requests}">
+                        <td>
+                            <span class="request-id">
+                                #<span th:text="${r.id}"></span>
+                            </span>
+                        </td>
+
+                        <td>
+                            <span class="listing-id"
+                                  th:text="${r.foodListingId}"></span>
+                        </td>
+
+                        <td class="recipient-cell"
+                            th:text="${r.requesterEmail}"></td>
+
+                        <td>
+                            <span class="quantity-value"
+                                  th:text="${r.requestedQuantity}"></span>
+                        </td>
+
+                        <td>
+                            <span class="tracking-status"
+                                  th:classappend="${r.status.name() == 'APPROVED'} ? ' status-approved' : (${r.status.name() == 'COLLECTED'} ? ' status-collected' : (${r.status.name() == 'DISTRIBUTED'} ? ' status-distributed' : ' status-other'))"
+                                  th:text="${r.status}">
+                            </span>
+                        </td>
+
+                        <td class="tracking-action-cell">
+                            <form
+                                th:if="${userRole == 'DONOR' and r.status.name() == 'APPROVED'}"
+                                method="post"
+                                th:action="@{/tracking/{id}/update(id=${r.id})}">
+                                <input type="hidden" name="status" value="COLLECTED">
+                                <button class="tracking-action-btn collect-btn"
+                                        type="submit">
+                                    ✓ Mark Collected
+                                </button>
+                            </form>
+
+                            <form
+                                th:if="${userRole == 'DONOR' and r.status.name() == 'COLLECTED'}"
+                                method="post"
+                                th:action="@{/tracking/{id}/update(id=${r.id})}">
+                                <input type="hidden" name="status" value="DISTRIBUTED">
+                                <button class="tracking-action-btn distribute-btn"
+                                        type="submit">
+                                    ✓ Mark Distributed
+                                </button>
+                            </form>
+
+                            <span
+                                class="no-action"
+                                th:unless="${userRole == 'DONOR' and (r.status.name() == 'APPROVED' or r.status.name() == 'COLLECTED')}">
+                                No action
+                            </span>
+                        </td>
+                    </tr>
+
+                    <tr th:if="${#lists.isEmpty(requests)}">
+                        <td colspan="6">
+                            <div class="tracking-empty">
+                                <span>📭</span>
+                                <h3>No donation requests yet</h3>
+                                <p>
+                                    Requests will appear here when donations
+                                    are ready to be tracked.
+                                </p>
+                                <a href="/food-listings">Explore food listings →</a>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <p class="tracking-table-note">
+            <span>🔒</span>
+            Only donors can update collection and distribution statuses.
+        </p>
+    </section>
+
+    <section class="tracking-section history-section">
+        <div class="tracking-section-heading">
+            <div>
+                <h2>Tracking history</h2>
+                <p>Review recorded status updates for donation requests.</p>
+            </div>
+            <span class="history-icon">🕘</span>
+        </div>
+
+        <div class="tracking-history-list"
+             th:if="${!#lists.isEmpty(records)}">
+
+            <article class="history-item" th:each="rec : ${records}">
+                <div class="history-marker">✓</div>
+
+                <div class="history-content">
+                    <div class="history-title-row">
+                        <h3>
+                            Request #
+                            <span th:text="${rec.donationRequestId}"></span>
+                        </h3>
+
+                        <span class="tracking-status status-other"
+                              th:text="${rec.status}"></span>
+                    </div>
+
+                    <p>
+                        Updated by
+                        <strong th:text="${rec.updatedBy}"></strong>
+                    </p>
+
+                    <span class="history-time"
+                          th:text="${rec.updatedAt}"></span>
+                </div>
+            </article>
+        </div>
+
+        <div class="tracking-empty history-empty"
+             th:if="${#lists.isEmpty(records)}">
+            <span>🗂️</span>
+            <h3>No tracking history yet</h3>
+            <p>Status updates will appear here as donations progress.</p>
+        </div>
+    </section>
+
+    <footer class="tracking-footer">
+        <a href="/dashboard">← Back to dashboard</a>
+        <span>🥗 FoodShare · Share more. Waste less.</span>
+    </footer>
+
+</main>
+</body>
+</html>

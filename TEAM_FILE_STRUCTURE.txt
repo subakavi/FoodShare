@@ -1,0 +1,27 @@
+FoodShare/
+├── pom.xml
+├── README.md
+├── data/
+├── src/main/java/com/foodshare/
+│   ├── FoodShareApplication.java
+│   ├── config/AppConfig.java
+│   ├── user/ (Member 1: registration/login)
+│   ├── listing/ (Member 1: food listings)
+│   ├── request/ (Member 2: donation requests)
+│   ├── matching/ (Member 2: matching service/controller)
+│   ├── tracking/ (Member 3: collection/distribution tracking)
+│   └── report/ (Member 3: reports/dashboard)
+├── src/main/resources/
+│   ├── application.properties
+│   ├── static/style.css
+│   └── templates/ (login, register, dashboard, listings, requests, matching, tracking, reports)
+└── src/test/java/com/foodshare/
+    ├── BasicApplicationTest.java
+    ├── user/AuthControllerTest.java
+    ├── listing/FoodListingControllerTest.java
+    ├── request/DonationRequestTest.java
+    ├── matching/MatchingServiceTest.java
+    ├── tracking/TrackingControllerTest.java
+    └── report/ReportServiceTest.java
+
+Note: generated target/ build output is excluded from source control.
